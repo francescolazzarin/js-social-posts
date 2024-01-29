@@ -93,7 +93,7 @@ posts.forEach((element,index) => {
                     </div>
                     <div class="post-meta__data">
                         <div class="post-meta__author">${element.author.name}</div>
-                        <div class="post-meta__time">${element.created}</div>
+                        <div class="post-meta__time">${formattaData(element.created)}</div>
                     </div>                    
                 </div>
             </div>
@@ -104,16 +104,45 @@ posts.forEach((element,index) => {
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#" data-postid="${element.id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${element.likes}</b> persone
+                        Piace a <b class="js-likes-counter" data-postid="${element.id}">${element.likes}</b> persone
                     </div>
                 </div> 
             </div>            
         </div>`
 
 });
+
+const likeButton=document.querySelectorAll('.js-like-button')
+const arrayLikes=[]
+likeButton.forEach((likeButton, index) => {
+    let miPiaceCheck = false
+    const contatore = document.querySelector(`.js-likes-counter[data-postid="${posts[index].id}"]`)
+    likeButton.addEventListener('click', function(event) {
+        event.preventDefault()
+        console.log(arrayLikes)
+        if (!miPiaceCheck) {
+            likeButton.classList.add('like-button--liked')
+            posts[index].likes++
+            arrayLikes.push(posts[index])
+        } else {
+            likeButton.classList.remove('like-button--liked')
+            posts[index].likes--
+            arrayLikes.splice(arrayLikes.indexOf(posts[index]), 1)
+        }
+        if (contatore) {
+            contatore.innerText = posts[index].likes
+        }
+        miPiaceCheck = !miPiaceCheck
+    })
+})
+function formattaData(data) {
+    const dataCreazione = new Date(data)
+    const dataFormattata = dataCreazione.toLocaleDateString('it-IT')
+    return dataFormattata
+}
