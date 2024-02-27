@@ -89,7 +89,7 @@ posts.forEach((element,index) => {
             <div class="post__header">
                 <div class="post-meta">                    
                     <div class="post-meta__icon">
-                        <img src="${element.author.image}" alt="${element.author.name}" class="profile-pic">            
+                    ${element.author.image !== null ? `<img src="${element.author.image}" alt="${element.author.name}" class="profile-pic">` : `<span class="iniziali">${prendiIniziali(element)}</span>`}          
                     </div>
                     <div class="post-meta__data">
                         <div class="post-meta__author">${element.author.name}</div>
@@ -145,4 +145,13 @@ function formattaData(data) {
     const dataCreazione = new Date(data)
     const dataFormattata = dataCreazione.toLocaleDateString('it-IT')
     return dataFormattata
+}
+function prendiIniziali(element) {
+    const nome = element.author.name
+    const image = element.author.image
+    if (image === null) {
+        const inizialiArray = nome.split(' ').map(word => word[0])
+        const iniziali= inizialiArray.join('')
+        return iniziali
+    }
 }
